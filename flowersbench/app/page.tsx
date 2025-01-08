@@ -7,7 +7,7 @@ export default function Home() {
           Welcome to FlowersBench
         </h1>
         <p className="text-lg text-gray-600 mb-8">
-          Compare AI-generated UI code across different models to find the best looking results.
+        The most ethical benchmarking of AI models under evaluation.
         </p>
         
         {/* Add your main content sections here */}
