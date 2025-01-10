@@ -1,85 +1,267 @@
 // app/benches/greentext/page.tsx
-'use client'
-import { useState } from 'react'
 
-export default function GreentextBench() {
-  const [response, setResponse] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
+'use client';
+import React, { useState } from 'react';
+import { Send } from 'lucide-react';
 
-  const handleTest = async () => {
+interface Message {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
+export default function ChatWindow() {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+
+    const userMessage: Message = {
+      role: 'user',
+      content: input.trim()
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
+    setIsLoading(true);
+
     try {
-      setIsLoading(true)
-      setResponse('')
-      setError('')
-
-      const response = await fetch('/api/chat', {
+      const response = await fetch(`/api/chat?modelName=anthropic/claude-3-opus`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          modelName: 'openai/gpt-3.5-turbo'
-        }),
-      })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: input }),
+      });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to fetch response');
-      }
+      if (!response.ok) throw new Error('Failed to get response');
 
-      if (response.body) {
-        const reader = response.body.getReader()
-        let text = ''
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let assistantMessage = '';
 
+      if (reader) {
         while (true) {
-          const { done, value } = await reader.read()
-          if (done) break
+          const { done, value } = await reader.read();
+          if (done) break;
 
-          const chunk = new TextDecoder().decode(value)
-          text += chunk
-          setResponse(text)
+          // Decode the streamed chunk
+          assistantMessage += decoder.decode(value);
+
+          setMessages(prevMessages => {
+            const newMessages = [...prevMessages];
+            const lastMessage = newMessages[newMessages.length - 1];
+            if (lastMessage?.role === 'assistant') {
+              // Update the existing assistant message
+              return [
+                ...newMessages.slice(0, -1),
+                { role: 'assistant', content: assistantMessage },
+              ];
+            } else {
+              // Add a new assistant message
+              return [
+                ...newMessages,
+                { role: 'assistant', content: assistantMessage },
+              ];
+            }
+          });
         }
       }
     } catch (error) {
-      console.error('Error:', error)
-      setError(error instanceof Error ? error.message : 'An error occurred')
+      console.error('Error:', error);
+      setMessages(prev => [
+        ...prev,
+        { role: 'assistant', content: 'Sorry, there was an error.' }
+      ]);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-4xl font-bold mb-8">Greentext Bench</h1>
-
-      <div className="space-y-6">
-        <button
-          onClick={handleTest}
-          disabled={isLoading}
-          className={`px-4 py-2 rounded font-medium ${
-            isLoading
-              ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-green-500 hover:bg-green-600 text-white'
-          }`}
-        >
-          {isLoading ? 'Getting Response...' : 'Test Chat'}
-        </button>
-
-        {error && (
-          <div className="bg-red-50 border-l-4 border-red-400 p-4">
-            <p className="text-red-700">{error}</p>
+    <div className="flex flex-col h-[600px] bg-white rounded-lg shadow-md">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {messages.map((msg, idx) => (
+          <div
+            key={idx}
+            className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+          >
+            <div
+              className={`max-w-[80%] rounded-lg p-3 ${
+                msg.role === 'user'
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-100 text-gray-800'
+              }`}
+            >
+              {msg.content}
+            </div>
           </div>
-        )}
-
-        {response && (
-          <div className="prose max-w-none">
-            <div className="bg-white shadow rounded-lg p-6 whitespace-pre-wrap">
-              {response}
+        ))}
+        {isLoading && (
+          <div className="flex justify-start">
+            <div className="bg-gray-100 rounded-lg p-3 text-gray-800">
+              <div className="flex space-x-2">
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100" />
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200" />
+              </div>
             </div>
           </div>
         )}
       </div>
+
+      <form onSubmit={handleSubmit} className="border-t p-4">
+        <div className="flex space-x-4">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Type your message..."
+            className="flex-1 border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Send className="w-5 h-5" />
+          </button>
+        </div>
+      </form>
     </div>
-  )
+  );
 }
+
+/*
+'use client';
+
+import React, { useState } from 'react';
+import { Send } from 'lucide-react';
+
+interface Message {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
+export default function ChatWindow() {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+
+    const userMessage: Message = {
+      role: 'user',
+      content: input.trim()
+    };
+
+    setMessages(prevMessages => [...prevMessages, userMessage]);
+    setInput('');
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(`/api/chat?modelName=anthropic/claude-3-opus`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: input }),
+      });
+
+      if (!response.ok) throw new Error('Failed to get response');
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let assistantMessage = '';
+
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          
+          assistantMessage += decoder.decode(value);
+          setMessages(prevMessages => {
+            const newMessages = [...prevMessages];
+            const lastMessage = newMessages[newMessages.length - 1];
+            
+            if (lastMessage?.role === 'assistant') {
+              return [
+                ...newMessages.slice(0, -1),
+                { role: 'assistant', content: assistantMessage }
+              ];
+            } else {
+              return [...newMessages, { role: 'assistant', content: assistantMessage }];
+            }
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setMessages(prevMessages => [
+        ...prevMessages, 
+        { role: 'assistant', content: 'Sorry, there was an error processing your request.' }
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col h-[600px] bg-white rounded-lg shadow-md">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {messages.map((message, index) => (
+          <div
+            key={index}
+            className={`flex ${
+              message.role === 'user' ? 'justify-end' : 'justify-start'
+            }`}
+          >
+            <div
+              className={`max-w-[80%] rounded-lg p-3 ${
+                message.role === 'user'
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-100 text-gray-800'
+              }`}
+            >
+              {message.content}
+            </div>
+          </div>
+        ))}
+        {isLoading && (
+          <div className="flex justify-start">
+            <div className="bg-gray-100 rounded-lg p-3 text-gray-800">
+              <div className="flex space-x-2">
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100" />
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200" />
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <form onSubmit={handleSubmit} className="border-t p-4">
+        <div className="flex space-x-4">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Type your message..."
+            className="flex-1 border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Send className="w-5 h-5" />
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+*/

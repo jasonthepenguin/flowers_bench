@@ -1,55 +1,74 @@
 // app/api/chat/route.ts
-import { createOpenRouter } from "@openrouter/ai-sdk-provider";
-import { streamText } from "ai";
-import { NextResponse } from 'next/server';
 
-export async function GET(request: Request) {
-  // This function will be an API endpoint
-  const apiKey = process.env.OPENROUTER_API_KEY;
-  
-  if (!apiKey) {
-    console.error('OPENROUTER_API_KEY not found in environment variables');
-    return NextResponse.json(
-      { error: 'API key not configured' },
-      { status: 500 }
-    );
-  }
 
-  return NextResponse.json({ status: 'API key found' });
-}
 
-export async function POST(request: Request) {
-  const apiKey = process.env.OPENROUTER_API_KEY;
-  
-  if (!apiKey) {
-    return NextResponse.json(
-      { error: 'API key not configured' },
-      { status: 500 }
-    );
-  }
+// app/api/chat/route.ts
 
-  const openrouter = createOpenRouter({
-    apiKey,
-    headers: {
-      "HTTP-Referer": process.env.NODE_ENV === 'development' 
-        ? "http://localhost:3000" 
-        : "https://www.flowersbench.com",
-      "X-Title": "Flowersbench"
-    }
-  });
+import { streamText } from 'ai';
+import { createOpenRouter } from '@openrouter/ai-sdk-provider';
+import { NextRequest } from 'next/server';
 
+export const runtime = 'edge';
+export const dynamic = 'force-dynamic';
+
+export async function POST(request: NextRequest) {
   try {
-    const { modelName } = await request.json();
+    const { message } = await request.json();
+    const { searchParams } = new URL(request.url);
+    const modelName = searchParams.get('modelName') || 'anthropic/claude-3-opus';
+
+    const openrouter = createOpenRouter({
+      apiKey: process.env.OPENROUTER_API_KEY!, 
+    });
+
+    // Make a streaming request
     const result = await streamText({
       model: openrouter(modelName),
-      prompt: "Write a vegetarian lasagna recipe for 4 people.",
+      // For Anthropic, you can pass a "prompt",
+      // while OpenAI often uses "messages" 
+      prompt: message,
     });
-    return result.toDataStreamResponse();
+
+    // Return the response as a text stream (SSE)
+    return result.toTextStreamResponse({
+      headers: {
+        'Content-Type': 'text/event-stream',
+      },
+    });
   } catch (error) {
-    console.error('OpenRouter API error:', error);
-    return NextResponse.json(
-      { error: 'Failed to process request' },
-      { status: 500 }
-    );
+    console.error(error);
+    return new Response('Error processing your request', { status: 500 });
   }
 }
+
+/*
+import { streamText } from "ai";
+import { createOpenRouter } from "@openrouter/ai-sdk-provider";
+import { NextRequest } from "next/server";
+
+
+export const runtime = "edge";
+export const dynamic = "force-dynamic";
+
+export async function POST(request: NextRequest) {
+  try {
+    const { message } = await request.json();
+    const { searchParams } = new URL(request.url);
+    const modelName = searchParams.get("modelName") || "anthropic/claude-3-opus";
+
+    const openrouter = createOpenRouter({
+      apiKey: process.env.OPENROUTER_API_KEY!,
+    });
+
+    const result = await streamText({
+      model: openrouter(modelName),
+      prompt: message,
+    });
+
+    return result.toDataStreamResponse(); // Changed from toAIStreamResponse to toDataStreamResponse
+  } catch (error) {
+    console.error(error);
+    return new Response("Error processing your request", { status: 500 });
+  }
+}
+  */
