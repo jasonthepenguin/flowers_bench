@@ -14,7 +14,7 @@ export default function Home() {
           </p>
 
           <p className="text-md text-gray-500 italic mb-8">
-            Currently a work in progress. This site aims to be a dictatorial reflection of @flowersslop's current views and evaluation of the latest models. Being built by me @JasonBotterill03, as a fun way to learn full-stack development.
+            Currently a work in progress. This site aims to be a dictatorial reflection of @flowersslop&#39;s current views and evaluation of the latest models. Being built by me @JasonBotterill03, as a fun way to learn full-stack development.
           </p>
 
           {/* Embedded Tweet */}
