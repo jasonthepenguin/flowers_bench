@@ -11,7 +11,7 @@ declare global {
       twttr?: {
         widgets: {
           load: () => void;
-          [key: string]: any;
+          [key: string]: unknown;
         };
       };
     }

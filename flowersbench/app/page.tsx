@@ -1,7 +1,6 @@
 // app/page.tsx
 "use client";
 
-import Script from "next/script";
 import TweetEmbed from "./components/TweetEmbed";
 
 export default function Home() {
