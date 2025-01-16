@@ -19,7 +19,10 @@ export default function Home() {
         </p>
 
         {/* Embedded Tweet via our dedicated component */}
-        <TweetEmbed tweetUrl="https://twitter.com/flowersslop/status/1874058976184459478?ref_src=twsrc%5Etfw" />
+        <div className="flex justify-center">
+          <TweetEmbed tweetUrl="https://twitter.com/flowersslop/status/1874058976184459478?ref_src=twsrc%5Etfw" />
+        </div>
+        
       </div>
     </div>
   );
