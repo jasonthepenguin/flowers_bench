@@ -28,11 +28,18 @@ export default function GreentextBench() {
   const [model1, setModel1] = useState(availableModels[0].value);  // default to first or whichever
   const [messages1, setMessages1] = useState<Message[]>([]);
   const [isLoading1, setIsLoading1] = useState(false);
+  const [systemPrompt1] = useState(
+    "Respond ONLY in greentext format."
+  )
+ 
 
   // State for Window 2
   const [model2, setModel2] = useState(availableModels[1].value);  // default to second or whichever
   const [messages2, setMessages2] = useState<Message[]>([]);
   const [isLoading2, setIsLoading2] = useState(false);
+  const [systemPrompt2] = useState(
+    "Respond ONLY in greentext format."
+  );
 
   // Shared input
   const [input, setInput] = useState("");
@@ -75,13 +82,14 @@ export default function GreentextBench() {
       const streamResponse = async (
         modelName: string,
         setMessages: React.Dispatch<React.SetStateAction<Message[]>>,
-        setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
+        setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
+        systemPrompt: string
       ) => {
         try {
           const resp = await fetch("/api/chat", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: userPrompt, modelName }),
+            body: JSON.stringify({ message: userPrompt, modelName, systemPrompt}),
           });
 
           if (!resp.ok) throw new Error("Failed to get response");
@@ -129,8 +137,8 @@ export default function GreentextBench() {
       };
 
       // Stream from both models in parallel
-      streamResponse(model1, setMessages1, setIsLoading1);
-      streamResponse(model2, setMessages2, setIsLoading2);
+      streamResponse(model1, setMessages1, setIsLoading1, systemPrompt1);
+      streamResponse(model2, setMessages2, setIsLoading2, systemPrompt2);
     } catch (error) {
       console.error("Submission error:", error);
       setIsLoading1(false);

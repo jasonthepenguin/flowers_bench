@@ -5,12 +5,11 @@ import { streamText } from "ai";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { NextRequest } from "next/server";
 
-export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   try {
-    const { message, modelName } = await request.json();
+    const { message, modelName, systemPrompt} = await request.json();
 
     const openrouter = createOpenRouter({
       apiKey: process.env.OPENROUTER_API_KEY!,
@@ -26,8 +25,7 @@ export async function POST(request: NextRequest) {
         messages: [
           {
             role: "system",
-            content:
-              "You are a helpful assistant. Respond ONLY in greentext format (4chan style).",
+            content: systemPrompt,
           },
           {
             role: "user",
@@ -37,15 +35,11 @@ export async function POST(request: NextRequest) {
       });
     } else {
       // Anthropic usage: pass "prompt"
-      const systemPrompt = `You are a helpful assistant. Respond ONLY in greentext format.
-
-User says: ${message}
-
-Assistant:`;
+      const prompt = `${systemPrompt}\n\nUser says: ${message}\n\nAssistant:`;
 
       result = await streamText({
         model: openrouter(modelName),
-        prompt: systemPrompt,
+        prompt: prompt,
       });
     }
 
