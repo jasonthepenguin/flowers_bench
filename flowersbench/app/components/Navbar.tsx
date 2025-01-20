@@ -98,7 +98,15 @@ const Navbar = () => {
             >
               About
             </Link>
+            <Link
+                href="/login"
+                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                >
+                  Login
+              </Link>
           </div>
+
+
         </div>
 
         {/* Mobile Menu */}
@@ -147,6 +155,14 @@ const Navbar = () => {
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 About
+              </Link>
+
+              <Link 
+                href="/login"
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                Login
               </Link>
             </div>
           </div>
