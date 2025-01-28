@@ -12,7 +12,6 @@ const Navbar = () => {
   const benchCategories = [
     { name: 'UI Bench', href: '/benches/ui' },
     { name: 'Greentext Bench', href: '/benches/greentext' },
-    { name: 'North Korea Bench', href: '/benches/northkorea' },
   ]
 
   return (
