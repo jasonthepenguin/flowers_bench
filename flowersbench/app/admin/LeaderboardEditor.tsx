@@ -1,7 +1,7 @@
 'use client'
 
 import { createClient } from '@/utils/supabase/client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 // Define the type for a leaderboard entry
 type LeaderboardEntry = {
@@ -29,22 +29,22 @@ export default function LeaderboardEditor() {
 
   const supabase = createClient()
 
-  useEffect(() => {
-    fetchEntries()
-  }, [])
-
-  async function fetchEntries() {
-    const { data, error } = await supabase
+  const fetchEntries = useCallback(async () => {
+    const { data } = await supabase
       .from('leaderboards')
       .select('*')
       .order('score', { ascending: false })
     
     if (data) setEntries(data as LeaderboardEntry[])
-  }
+  }, []) // supabase client is stable, so we don't need it in deps
+
+  useEffect(() => {
+    fetchEntries()
+  }, [fetchEntries])
 
   async function addEntry(e: React.FormEvent) {
     e.preventDefault()
-    const { error } = await supabase
+    const { error: insertError } = await supabase
       .from('leaderboards')
       .insert([{
         model_name: newEntry.model_name,
@@ -52,19 +52,19 @@ export default function LeaderboardEditor() {
         organization: newEntry.organization
       }])
 
-    if (!error) {
+    if (!insertError) {
       setNewEntry({ model_name: '', score: '', organization: '' })
       fetchEntries()
     }
   }
 
   async function deleteEntry(id: string) {
-    const { error } = await supabase
+    const { error: deleteError } = await supabase
       .from('leaderboards')
       .delete()
       .eq('id', id)
 
-    if (!error) {
+    if (!deleteError) {
       fetchEntries()
     }
   }
