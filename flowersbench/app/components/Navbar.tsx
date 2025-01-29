@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { ChevronDown, Menu, X } from 'lucide-react'
-import CherryBlossom from './icons/CherryBlossom'
 import FlowersBenchLogo from './icons/FlowersBenchLogo'
 
 const Navbar = () => {

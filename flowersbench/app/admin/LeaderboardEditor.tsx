@@ -36,7 +36,7 @@ export default function LeaderboardEditor() {
       .order('score', { ascending: false })
     
     if (data) setEntries(data as LeaderboardEntry[])
-  }, []) // supabase client is stable, so we don't need it in deps
+  }, [supabase])
 
   useEffect(() => {
     fetchEntries()
