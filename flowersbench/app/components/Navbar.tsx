@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { ChevronDown, Menu, X } from 'lucide-react'
 import CherryBlossom from './icons/CherryBlossom'
+import FlowersBenchLogo from './icons/FlowersBenchLogo'
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
@@ -21,7 +22,7 @@ const Navbar = () => {
           {/* Logo and Icon Section */}
           <div className="flex items-center space-x-4">
             <Link href="/" className="flex items-center space-x-2">
-              <span className="text-xl font-semibold dark:text-white">FlowersBench</span>
+              {/* <span className="text-xl font-semibold dark:text-white">FlowersBench</span> */}
             </Link>
             <a
               href="https://x.com/flowersslop"
@@ -29,7 +30,8 @@ const Navbar = () => {
               rel="noopener noreferrer"
               className="hover:opacity-80 transition-opacity"
             >
-              <CherryBlossom />
+              
+              <FlowersBenchLogo />
             </a>
           </div>
 
@@ -49,6 +51,14 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex space-x-8">
+            {/* Home Link */}
+            <Link
+              href="/"
+              className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+            >
+              Home
+            </Link>
+
             {/* Benches Dropdown */}
             <div className="relative">
               <button
@@ -112,6 +122,15 @@ const Navbar = () => {
         {isMobileMenuOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1">
+              {/* Home Link */}
+              <Link
+                href="/"
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Home
+              </Link>
+
               {/* Mobile Benches Dropdown */}
               <div className="relative">
                 <button
