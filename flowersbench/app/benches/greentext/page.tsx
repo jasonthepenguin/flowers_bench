@@ -154,7 +154,7 @@ export default function GreentextBench() {
       <div className="mb-4">
         <button
           onClick={handleClearChats}
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+          className="bg-rose-700 text-white px-4 py-2 rounded hover:bg-rose-600 transition-colors"
         >
           Clear Chats
         </button>
@@ -167,7 +167,7 @@ export default function GreentextBench() {
             Model for Window 1:
           </label>
           <select
-            className="border rounded-md p-2 w-full"
+            className="border rounded-md p-2 w-full dark:bg-zinc-800 dark:border-zinc-700 dark:text-white"
             value={model1}
             onChange={(e) => clearWindow1(e.target.value)}
           >
@@ -184,7 +184,7 @@ export default function GreentextBench() {
             Model for Window 2:
           </label>
           <select
-            className="border rounded-md p-2 w-full"
+            className="border rounded-md p-2 w-full dark:bg-zinc-800 dark:border-zinc-700 dark:text-white"
             value={model2}
             onChange={(e) => clearWindow2(e.target.value)}
           >
@@ -200,14 +200,14 @@ export default function GreentextBench() {
       {/* Single prompt input */}
       <form onSubmit={handleSubmit} className="flex gap-2 mb-6">
         <input
-          className="flex-1 border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="flex-1 border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white"
           placeholder="Type your prompt..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
         />
         <button
           type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-400 disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={isLoading1 || isLoading2}
         >
           <Send className="w-5 h-5 inline-block" />
@@ -217,7 +217,7 @@ export default function GreentextBench() {
       {/* Two chat windows (side-by-side on larger screens) */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Window 1 */}
-        <div className="flex flex-col h-[500px] bg-white rounded-lg shadow-md">
+        <div className="flex flex-col h-[500px] bg-zinc-900 rounded-lg shadow-md">
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
             {messages1.map((msg, idx) => (
               <div
@@ -229,8 +229,8 @@ export default function GreentextBench() {
                 <div
                   className={`max-w-[80%] rounded-lg p-3 ${
                     msg.role === 'user'
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-100 text-gray-800'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-zinc-800 text-gray-100'
                   } whitespace-pre-wrap break-words`}
                 >
                   {msg.content}
@@ -239,7 +239,7 @@ export default function GreentextBench() {
             ))}
             {isLoading1 && (
               <div className="flex justify-start">
-                <div className="bg-gray-100 rounded-lg p-3 text-gray-800">
+                <div className="bg-zinc-800 rounded-lg p-3 text-gray-100">
                   <TypingDots />
                 </div>
               </div>
@@ -248,7 +248,7 @@ export default function GreentextBench() {
         </div>
 
         {/* Window 2 */}
-        <div className="flex flex-col h-[500px] bg-white rounded-lg shadow-md">
+        <div className="flex flex-col h-[500px] bg-zinc-900 rounded-lg shadow-md">
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
             {messages2.map((msg, idx) => (
               <div
@@ -260,8 +260,8 @@ export default function GreentextBench() {
                 <div
                   className={`max-w-[80%] rounded-lg p-3 ${
                     msg.role === 'user'
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-100 text-gray-800'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-zinc-800 text-gray-100'
                   } whitespace-pre-wrap break-words`}
                 >
                   {msg.content}
@@ -270,7 +270,7 @@ export default function GreentextBench() {
             ))}
             {isLoading2 && (
               <div className="flex justify-start">
-                <div className="bg-gray-100 rounded-lg p-3 text-gray-800">
+                <div className="bg-zinc-800 rounded-lg p-3 text-gray-100">
                   <TypingDots />
                 </div>
               </div>
