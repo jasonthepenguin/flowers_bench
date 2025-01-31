@@ -40,14 +40,14 @@ export default async function Leaderboard() {
           <tbody className="bg-white dark:bg-zinc-900 divide-y divide-gray-200 dark:divide-zinc-700">
             {entries?.map((entry, index) => (
               <tr key={entry.id} className={index % 2 === 0 ? 'bg-white dark:bg-zinc-900' : 'bg-gray-50 dark:bg-zinc-800'}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
-                  {index + 1}
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#FF6EC7] dark:text-[#FF6EC7]">
+                  #{index + 1}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                   {entry.model_name}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                  {entry.score}
+                  {entry.score.toFixed(1)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                   {entry.organization}
