@@ -1,7 +1,7 @@
 // app/page.tsx
 "use client";
 
-import TweetEmbed from "./components/TweetEmbed";
+import { Tweet } from "react-tweet";
 
 export default function Home() {
   return (
@@ -18,9 +18,9 @@ export default function Home() {
           Being built by me @JasonBotterill03, as a fun way to learn full-stack development.
         </p>
 
-        {/* Embedded Tweet via our dedicated component */}
+        {/* Replace the TweetEmbed component with Tweet */}
         <div className="flex justify-center">
-          <TweetEmbed tweetUrl="https://twitter.com/flowersslop/status/1874058976184459478?ref_src=twsrc%5Etfw" />
+          <Tweet id="1874058976184459478" />
         </div>
         
       </div>
