@@ -19,12 +19,29 @@ type NewEntry = {
   organization: string
 }
 
+// Add Tweet type to your existing types
+type TweetEntry = {
+  id: string
+  tweet_id: string
+  created_at: string
+}
+
+type NewTweetEntry = {
+  tweet_id: string
+}
+
 export default function LeaderboardEditor() {
   const [entries, setEntries] = useState<LeaderboardEntry[]>([])
   const [newEntry, setNewEntry] = useState<NewEntry>({
     model_name: '',
     score: '',
     organization: ''
+  })
+
+  // Add new states for tweets
+  const [currentTweet, setCurrentTweet] = useState<TweetEntry | null>(null)
+  const [newTweet, setNewTweet] = useState<NewTweetEntry>({
+    tweet_id: ''
   })
 
   const supabase = createClient()
@@ -38,9 +55,24 @@ export default function LeaderboardEditor() {
     if (data) setEntries(data as LeaderboardEntry[])
   }, [supabase])
 
+  const fetchCurrentTweet = useCallback(async () => {
+    const { data } = await supabase
+      .from('featured_tweets')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(1)
+    
+    if (data && data.length > 0) {
+      setCurrentTweet(data[0] as TweetEntry)
+    } else {
+      setCurrentTweet(null)
+    }
+  }, [supabase])
+
   useEffect(() => {
     fetchEntries()
-  }, [fetchEntries])
+    fetchCurrentTweet()
+  }, [fetchEntries, fetchCurrentTweet])
 
   async function addEntry(e: React.FormEvent) {
     e.preventDefault()
@@ -66,6 +98,30 @@ export default function LeaderboardEditor() {
 
     if (!deleteError) {
       fetchEntries()
+    }
+  }
+
+  async function addTweet(e: React.FormEvent) {
+    e.preventDefault()
+    
+    // First, delete the current tweet if it exists
+    if (currentTweet) {
+      await supabase
+        .from('featured_tweets')
+        .delete()
+        .eq('id', currentTweet.id)
+    }
+
+    // Then add the new tweet
+    const { error: insertError } = await supabase
+      .from('featured_tweets')
+      .insert([{
+        tweet_id: newTweet.tweet_id
+      }])
+
+    if (!insertError) {
+      setNewTweet({ tweet_id: '' })
+      fetchCurrentTweet()
     }
   }
 
@@ -120,6 +176,48 @@ export default function LeaderboardEditor() {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Tweet Management Section */}
+      <div className="mt-12 pt-8 border-t border-zinc-700">
+        <h2 className="text-2xl font-bold mb-4">Featured Tweet</h2>
+        
+        <form onSubmit={addTweet} className="space-y-4">
+          <div className="space-y-2">
+            <label className="block text-sm text-zinc-400">Tweet URL or ID</label>
+            <input
+              type="text"
+              placeholder="Paste tweet URL or ID (e.g., 1874058976184459478)"
+              value={newTweet.tweet_id}
+              onChange={(e) => {
+                const input = e.target.value;
+                const id = input.includes('twitter.com') 
+                  ? input.split('/').pop() 
+                  : input;
+                setNewTweet({ tweet_id: id || '' });
+              }}
+              className="block w-full px-3 py-2 border border-zinc-700 rounded-md bg-zinc-900 text-white placeholder-zinc-400"
+            />
+          </div>
+          <button
+            type="submit"
+            className="px-4 py-2 bg-blue-500 text-white rounded-md"
+          >
+            Update Featured Tweet
+          </button>
+        </form>
+
+        {currentTweet && (
+          <div className="mt-8">
+            <h3 className="text-lg font-semibold mb-2">Currently Featured:</h3>
+            <div className="p-4 border border-zinc-700 rounded-md">
+              <p className="font-bold">Tweet ID: {currentTweet.tweet_id}</p>
+              <p className="text-sm text-zinc-400">
+                Added: {new Date(currentTweet.created_at).toLocaleString()}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
