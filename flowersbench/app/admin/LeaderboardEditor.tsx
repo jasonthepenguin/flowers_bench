@@ -191,10 +191,14 @@ export default function LeaderboardEditor() {
               value={newTweet.tweet_id}
               onChange={(e) => {
                 const input = e.target.value;
-                const id = input.includes('twitter.com') 
-                  ? input.split('/').pop() 
-                  : input;
-                setNewTweet({ tweet_id: id || '' });
+                // Enhanced URL parsing
+                let id = input;
+                if (input.includes('/status/')) {
+                  // Extract ID from various Twitter/X URL formats
+                  const match = input.match(/\/status\/(\d+)/);
+                  id = match ? match[1] : input;
+                }
+                setNewTweet({ tweet_id: id });
               }}
               className="block w-full px-3 py-2 border border-zinc-700 rounded-md bg-zinc-900 text-white placeholder-zinc-400"
             />
