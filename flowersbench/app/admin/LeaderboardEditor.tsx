@@ -48,7 +48,7 @@ export default function LeaderboardEditor() {
       .from('leaderboards')
       .insert([{
         model_name: newEntry.model_name,
-        score: parseInt(newEntry.score),
+        score: parseFloat(newEntry.score),
         organization: newEntry.organization
       }])
 
@@ -77,21 +77,21 @@ export default function LeaderboardEditor() {
           placeholder="Model Name"
           value={newEntry.model_name}
           onChange={(e) => setNewEntry({...newEntry, model_name: e.target.value})}
-          className="block w-full px-3 py-2 border rounded-md"
+          className="block w-full px-3 py-2 border border-zinc-700 rounded-md bg-zinc-900 text-white placeholder-zinc-400"
         />
         <input
           type="number"
           placeholder="Score"
           value={newEntry.score}
           onChange={(e) => setNewEntry({...newEntry, score: e.target.value})}
-          className="block w-full px-3 py-2 border rounded-md"
+          className="block w-full px-3 py-2 border border-zinc-700 rounded-md bg-zinc-900 text-white placeholder-zinc-400"
         />
         <input
           type="text"
           placeholder="Organization"
           value={newEntry.organization}
           onChange={(e) => setNewEntry({...newEntry, organization: e.target.value})}
-          className="block w-full px-3 py-2 border rounded-md"
+          className="block w-full px-3 py-2 border border-zinc-700 rounded-md bg-zinc-900 text-white placeholder-zinc-400"
         />
         <button
           type="submit"
@@ -108,7 +108,7 @@ export default function LeaderboardEditor() {
             <div key={entry.id} className="flex justify-between items-center p-4 border rounded-md">
               <div>
                 <p className="font-bold">{entry.model_name}</p>
-                <p>Score: {entry.score}</p>
+                <p>Score: {entry.score.toFixed(1)}</p>
                 <p>Organization: {entry.organization}</p>
               </div>
               <button
