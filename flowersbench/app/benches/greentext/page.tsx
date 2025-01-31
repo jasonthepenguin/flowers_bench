@@ -227,10 +227,10 @@ export default function GreentextBench() {
                 }`}
               >
                 <div
-                  className={`max-w-[80%] rounded-lg p-3 ${
+                  className={`max-w-[80%] rounded-lg p-3 shadow-sm ${
                     msg.role === 'user'
                       ? 'bg-blue-600 text-white'
-                      : 'bg-zinc-800 text-gray-100'
+                      : 'bg-[#E6DDD6] text-[#8bac34]'
                   } whitespace-pre-wrap break-words`}
                 >
                   {msg.content}
@@ -258,10 +258,10 @@ export default function GreentextBench() {
                 }`}
               >
                 <div
-                  className={`max-w-[80%] rounded-lg p-3 ${
+                  className={`max-w-[80%] rounded-lg p-3 shadow-sm ${
                     msg.role === 'user'
                       ? 'bg-blue-600 text-white'
-                      : 'bg-zinc-800 text-gray-100'
+                      : 'bg-[#E6DDD6] text-[#8bac34]'
                   } whitespace-pre-wrap break-words`}
                 >
                   {msg.content}
