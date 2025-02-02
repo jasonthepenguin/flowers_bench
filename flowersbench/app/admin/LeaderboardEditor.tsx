@@ -84,10 +84,13 @@ export default function LeaderboardEditor() {
         organization: newEntry.organization
       }])
 
-    if (!insertError) {
-      setNewEntry({ model_name: '', score: '', organization: '' })
-      fetchEntries()
+    if (insertError) {
+      console.error('Error adding entry:', insertError);
+      // Optionally add user-facing error handling
+      return;
     }
+    setNewEntry({ model_name: '', score: '', organization: '' })
+    fetchEntries()
   }
 
   async function deleteEntry(id: string) {

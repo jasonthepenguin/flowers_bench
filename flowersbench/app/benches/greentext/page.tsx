@@ -2,8 +2,9 @@
 
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Send } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
 
 interface Message {
   role: "user" | "assistant";
@@ -43,6 +44,30 @@ export default function GreentextBench() {
 
   // Shared input
   const [input, setInput] = useState("");
+
+  // Add new state for API key
+  const [userApiKey, setUserApiKey] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
+  
+  // Check admin status on component mount
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('is_admin')
+          .eq('id', user.id)
+          .single();
+        
+        setIsAdmin(!!profile?.is_admin);
+      }
+    };
+    
+    checkAdminStatus();
+  }, []);
 
   // Clear both chats
   const handleClearChats = () => {
@@ -88,7 +113,10 @@ export default function GreentextBench() {
         try {
           const resp = await fetch("/api/chat", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+              "Content-Type": "application/json",
+              ...(userApiKey && { "X-OpenRouter-Key": userApiKey }),
+            },
             body: JSON.stringify({ message: userPrompt, modelName, systemPrompt}),
           });
 
@@ -213,6 +241,21 @@ export default function GreentextBench() {
           <Send className="w-5 h-5 inline-block" />
         </button>
       </form>
+
+      {!isAdmin && (
+        <div className="mb-4">
+          <label className="block font-medium mb-1">
+            OpenRouter API Key:
+          </label>
+          <input
+            type="password"
+            className="border rounded-md p-2 w-full dark:bg-zinc-800 dark:border-zinc-700 dark:text-white"
+            value={userApiKey}
+            onChange={(e) => setUserApiKey(e.target.value)}
+            placeholder="Required for non-admin users"
+          />
+        </div>
+      )}
 
       {/* Two chat windows (side-by-side on larger screens) */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
