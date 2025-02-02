@@ -25,8 +25,8 @@ export default async function Home() {
 
           <p className="text-md text-gray-500 dark:text-gray-400 italic mb-8">
             Currently a work in progress. This site aims to be a dictatorial reflection 
-            of @flowersslop&apos;s current views and evaluation of the latest models. 
-            Being built by me @JasonBotterill03, as a fun way to learn full-stack development.
+            of <a href="https://x.com/flowersslop" target="_blank" rel="noopener noreferrer" className="text-pink-500 hover:text-pink-400">@flowersslop</a>&apos;s current views and evaluation of the latest models. 
+            Being built by Jason Botterill, as a fun way to learn full-stack development.
           </p>
 
           {currentTweet && (
