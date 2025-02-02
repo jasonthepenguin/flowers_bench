@@ -21,11 +21,22 @@ export async function POST(request: NextRequest) {
       try {
         const { isAdmin } = await checkAdmin(true);
         if (!isAdmin) {
-          return new Response('Unauthorized - Please provide an API key', { status: 401 });
+          // Return a more user-friendly message that will be displayed in the chat
+          return new Response(JSON.stringify({
+            error: "Please enter your OpenRouter API key above to start chatting."
+          }), { 
+            status: 401,
+            headers: { 'Content-Type': 'application/json' }
+          });
         }
         apiKey = process.env.OPENROUTER_API_KEY!;
       } catch {
-        return new Response('Unauthorized - Please provide an API key', { status: 401 });
+        return new Response(JSON.stringify({
+          error: "Please enter your OpenRouter API key above to start chatting."
+        }), { 
+          status: 401,
+          headers: { 'Content-Type': 'application/json' }
+        });
       }
     } else {
       apiKey = userApiKey;
