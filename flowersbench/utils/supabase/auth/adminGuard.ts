@@ -3,11 +3,14 @@ import { redirect } from 'next/navigation'
 
 // utils/supabase/auth/adminGuard.ts
 
-export async function checkAdmin() {
+export async function checkAdmin(isApiRoute = false) {
   const supabase = await createClient()
   
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
+    if (isApiRoute) {
+      return { isAdmin: false };
+    }
     redirect('/login')
   }
 
@@ -18,6 +21,11 @@ export async function checkAdmin() {
     .single()
 
   if (!profile?.is_admin) {
+    if (isApiRoute) {
+      return { isAdmin: false };
+    }
     redirect('/unauthorized')
   }
+
+  return { isAdmin: true };
 }
