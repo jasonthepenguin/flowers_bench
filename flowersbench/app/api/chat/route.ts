@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
           return new Response('Unauthorized - Please provide an API key', { status: 401 });
         }
         apiKey = process.env.OPENROUTER_API_KEY!;
-      } catch (error) {
+      } catch {
         return new Response('Unauthorized - Please provide an API key', { status: 401 });
       }
     } else {
