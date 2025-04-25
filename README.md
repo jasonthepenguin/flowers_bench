@@ -1,4 +1,3 @@
-![FlowersBench Screenshot](https://github.com/user-attachments/assets/f1ede937-0574-4a18-9f7a-0386c65b4831)
 
 # FlowersBench
 
