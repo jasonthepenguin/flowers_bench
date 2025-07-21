@@ -50,59 +50,60 @@ export default async function Leaderboard() {
 
         {/* Leaderboard */}
         {entries && entries.length > 0 ? (
-          <div className="space-y-4">
-            {entries.map((entry, index) => {
-              const rank = index + 1
-              const isTopThree = rank <= 3
-              
-              return (
-                <div 
-                  key={entry.id} 
-                  className={`glass glass-hover rounded-2xl p-6 transition-all duration-300 ${
-                    isTopThree ? 'soft-glow-cyan' : 'soft-glow'
-                  }`}
-                >
-                  <div className="flex items-center justify-between flex-wrap gap-4">
+          <div className="glass rounded-2xl overflow-hidden soft-glow">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-white/10">
+                    <th className="text-left p-4 text-white/80 font-medium text-sm uppercase tracking-wider">Rank</th>
+                    <th className="text-left p-4 text-white/80 font-medium text-sm uppercase tracking-wider">Model</th>
+                    <th className="text-left p-4 text-white/80 font-medium text-sm uppercase tracking-wider">Organization</th>
+                    <th className="text-center p-4 text-white/80 font-medium text-sm uppercase tracking-wider">Score</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {entries.map((entry, index) => {
+                    const rank = index + 1
+                    const isTopThree = rank <= 3
                     
-                    {/* Rank and Model */}
-                    <div className="flex items-center space-x-4 flex-1 min-w-0">
-                      <div className="flex items-center justify-center w-12 h-12 rounded-xl glass">
-                        {getRankIcon(rank)}
-                      </div>
-                      
-                      <div className="min-w-0 flex-1">
-                        <h3 className="text-xl font-semibold text-white truncate">
-                          {entry.model_name}
-                        </h3>
-                        <p className="text-white/60 text-sm font-medium">
-                          {entry.organization}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Score */}
-                    <div className="text-right">
-                      <div className={`text-3xl font-bold ${getScoreColor(entry.score)} text-glow`}>
-                        {entry.score.toFixed(1)}
-                      </div>
-                      <div className="text-white/50 text-sm font-medium">
-                        Score
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Progress Bar */}
-                  <div className="mt-4">
-                    <div className="w-full bg-white/10 rounded-full h-2">
-                      <div 
-                        className="h-2 rounded-full bg-gradient-to-r from-cyan-400 to-purple-500 transition-all duration-1000 ease-out"
-                        style={{ width: `${entry.score}%` }}
-                      ></div>
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
+                    return (
+                      <tr 
+                        key={entry.id} 
+                        className="border-b border-white/5 hover:bg-white/5 transition-colors duration-200"
+                      >
+                        <td className="p-4">
+                          <div className="flex items-center space-x-2">
+                            <div className={`flex items-center justify-center w-8 h-8 rounded-lg ${
+                              isTopThree ? 'glass' : ''
+                            }`}>
+                              {getRankIcon(rank)}
+                            </div>
+                          </div>
+                        </td>
+                        
+                        <td className="p-4">
+                          <div className="font-medium text-white">
+                            {entry.model_name}
+                          </div>
+                        </td>
+                        
+                        <td className="p-4">
+                          <div className="text-white/70 text-sm">
+                            {entry.organization}
+                          </div>
+                        </td>
+                        
+                        <td className="p-4 text-center">
+                          <span className={`text-lg font-bold ${getScoreColor(entry.score)}`}>
+                            {entry.score.toFixed(1)}
+                          </span>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         ) : (
           <div className="glass rounded-2xl p-12 text-center soft-glow">
@@ -117,7 +118,7 @@ export default async function Leaderboard() {
 
         {/* Info Section */}
         <div className="mt-16 glass rounded-2xl p-8 soft-glow">
-          <h3 className="text-2xl font-semibold text-white mb-4 text-center">
+          <h3 className="text-2xl font-semibold text-white mb-8 text-center">
             How We Rank Models
           </h3>
           <div className="grid md:grid-cols-3 gap-6 text-center">
