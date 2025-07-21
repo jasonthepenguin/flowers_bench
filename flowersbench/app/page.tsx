@@ -44,10 +44,10 @@ export default async function Home() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Link href="/leaderboard" className="neon-button text-black font-semibold no-underline">
+              <Link href="/leaderboard" className="neon-button-secondary text-black font-semibold no-underline">
                 View Leaderboard
               </Link>
-              <Link href="/about" className="neon-button-secondary text-black font-semibold no-underline">
+              <Link href="/about" className="neon-button text-black font-semibold no-underline">
                 Learn More
               </Link>
             </div>

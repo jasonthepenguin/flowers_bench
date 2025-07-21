@@ -84,7 +84,7 @@ body {
   
   body {
     @apply bg-black text-foreground font-light;
-    background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
+    background: linear-gradient(135deg, #000000 0%, #121212 50%, #080808 100%);
     min-height: 100vh;
   }
   
