@@ -67,22 +67,6 @@ export default async function Home() {
             </div>
           )}
 
-          {/* Stats Cards */}
-          <div className="grid md:grid-cols-3 gap-6 mb-16">
-            <div className="glass glass-hover rounded-2xl p-8 text-center soft-glow">
-              <div className="text-3xl font-bold text-neon-cyan mb-2">20+</div>
-              <div className="text-white/80 font-medium">Models Evaluated</div>
-            </div>
-            <div className="glass glass-hover rounded-2xl p-8 text-center soft-glow">
-              <div className="text-3xl font-bold text-neon-purple mb-2">100%</div>
-              <div className="text-white/80 font-medium">Ethical Standards</div>
-            </div>
-            <div className="glass glass-hover rounded-2xl p-8 text-center soft-glow">
-              <div className="text-3xl font-bold text-neon-pink mb-2">∞</div>
-              <div className="text-white/80 font-medium">Learning Potential</div>
-            </div>
-          </div>
-
           {/* Development Note */}
           <div className="glass rounded-2xl p-8 text-center soft-glow">
             <h3 className="text-xl font-semibold text-white mb-4">

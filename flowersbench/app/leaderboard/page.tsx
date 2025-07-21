@@ -106,7 +106,6 @@ export default async function Leaderboard() {
           </div>
         ) : (
           <div className="glass rounded-2xl p-12 text-center soft-glow">
-            <div className="text-6xl mb-4">🤖</div>
             <h3 className="text-2xl font-semibold text-white mb-4">
               No Models Yet
             </h3>
@@ -123,16 +122,16 @@ export default async function Leaderboard() {
           </h3>
           <div className="grid md:grid-cols-3 gap-6 text-center">
             <div>
-              <div className="text-neon-cyan text-lg font-semibold mb-2">Performance</div>
-              <p className="text-white/70 text-sm">Accuracy and speed across various tasks</p>
+              <div className="text-neon-cyan text-lg font-semibold mb-2">Aesthetics</div>
+              <p className="text-white/70 text-sm">Visual appeal and design elegance of responses</p>
             </div>
             <div>
-              <div className="text-neon-purple text-lg font-semibold mb-2">Ethics</div>
-              <p className="text-white/70 text-sm">Safety measures and bias mitigation</p>
+              <div className="text-neon-purple text-lg font-semibold mb-2">Playability</div>
+              <p className="text-white/70 text-sm">Fun factor and engaging conversation quality</p>
             </div>
             <div>
-              <div className="text-neon-pink text-lg font-semibold mb-2">Innovation</div>
-              <p className="text-white/70 text-sm">Novel capabilities and improvements</p>
+              <div className="text-neon-pink text-lg font-semibold mb-2">Taste</div>
+              <p className="text-white/70 text-sm">Cultural refinement and sophisticated judgment</p>
             </div>
           </div>
         </div>

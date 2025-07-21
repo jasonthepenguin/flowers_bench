@@ -38,58 +38,6 @@ export default function About() {
           </p>
         </div>
 
-        {/* Evaluation Criteria */}
-        <div className="glass rounded-2xl p-8 mb-12 soft-glow">
-          <h2 className="text-3xl font-semibold text-white mb-8">Evaluation Criteria</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 mx-auto mb-4 glass rounded-2xl flex items-center justify-center">
-                <span className="text-2xl">⚡</span>
-              </div>
-              <h3 className="text-xl font-semibold text-neon-cyan mb-3">Performance</h3>
-              <p className="text-white/70 font-light">
-                Speed, accuracy, and capability across diverse tasks and domains
-              </p>
-            </div>
-            
-            <div className="text-center">
-              <div className="w-16 h-16 mx-auto mb-4 glass rounded-2xl flex items-center justify-center">
-                <span className="text-2xl">🛡️</span>
-              </div>
-              <h3 className="text-xl font-semibold text-neon-purple mb-3">Safety</h3>
-              <p className="text-white/70 font-light">
-                Bias mitigation, harmful content prevention, and responsible AI practices
-              </p>
-            </div>
-            
-            <div className="text-center">
-              <div className="w-16 h-16 mx-auto mb-4 glass rounded-2xl flex items-center justify-center">
-                <span className="text-2xl">🚀</span>
-              </div>
-              <h3 className="text-xl font-semibold text-neon-pink mb-3">Innovation</h3>
-              <p className="text-white/70 font-light">
-                Novel capabilities, architectural improvements, and future potential
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Development Story */}
-        <div className="glass rounded-2xl p-8 mb-12 soft-glow">
-          <h2 className="text-3xl font-semibold text-white mb-6">Development Story</h2>
-          <p className="text-lg text-white/80 font-light leading-relaxed mb-6">
-            FlowersBench is being built by{' '}
-            <span className="text-neon-cyan font-medium">Jason Botterill</span>{' '}
-            as a comprehensive exploration in full-stack development, combining 
-            modern web technologies with AI evaluation methodologies.
-          </p>
-          <p className="text-lg text-white/70 font-light leading-relaxed">
-            This project serves dual purposes: creating a valuable resource for 
-            the AI community while providing hands-on learning experience in 
-            React, Next.js, TypeScript, Supabase, and modern web design principles.
-          </p>
-        </div>
-
         {/* Technical Stack */}
         <div className="glass rounded-2xl p-8 mb-12 soft-glow">
           <h2 className="text-3xl font-semibold text-white mb-6">Technical Stack</h2>
