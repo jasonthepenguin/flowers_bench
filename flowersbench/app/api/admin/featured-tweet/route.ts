@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
 
   try {
     // Verify admin authentication
-    const isAdmin = await checkAdmin(true)
+    const { isAdmin } = await checkAdmin(true)
     if (!isAdmin) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
 
   try {
     // Verify admin authentication
-    const isAdmin = await checkAdmin(true)
+    const { isAdmin } = await checkAdmin(true)
     if (!isAdmin) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -139,7 +139,7 @@ export async function DELETE(request: NextRequest) {
 
   try {
     // Verify admin authentication
-    const isAdmin = await checkAdmin(true)
+    const { isAdmin } = await checkAdmin(true)
     if (!isAdmin) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
