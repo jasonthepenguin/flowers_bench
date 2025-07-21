@@ -2,17 +2,11 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { ChevronDown, Menu, X } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import FlowersBenchLogo from './icons/FlowersBenchLogo'
 
 const Navbar = () => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-
-  const benchCategories = [
-    { name: 'UI Bench', href: '/benches/ui' },
-    { name: 'Greentext Bench', href: '/benches/greentext' },
-  ]
 
   return (
     <nav className="fixed top-0 left-0 right-0 bg-white dark:bg-zinc-900 shadow-sm dark:shadow-zinc-800 z-50">
@@ -58,42 +52,6 @@ const Navbar = () => {
               Home
             </Link>
 
-            {/* Benches Dropdown */}
-            <div className="relative">
-              <button
-                className="flex items-center space-x-1 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                onMouseEnter={() => setIsDropdownOpen(true)}
-                onMouseLeave={() => {
-                  setTimeout(() => {
-                    if (!document.querySelector('.dropdown:hover')) {
-                      setIsDropdownOpen(false)
-                    }
-                  }, 100)
-                }}
-              >
-                <span>Benches</span>
-                <ChevronDown className="h-4 w-4" />
-              </button>
-
-              {isDropdownOpen && (
-                <div
-                  className="dropdown absolute left-0 w-48 mt-1 py-2 bg-white dark:bg-zinc-900 rounded-md shadow-lg"
-                  onMouseEnter={() => setIsDropdownOpen(true)}
-                  onMouseLeave={() => setIsDropdownOpen(false)}
-                >
-                  {benchCategories.map((category) => (
-                    <Link
-                      key={category.name}
-                      href={category.href}
-                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800"
-                    >
-                      {category.name}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-
             <Link
               href="/leaderboard"
               className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
@@ -129,35 +87,6 @@ const Navbar = () => {
               >
                 Home
               </Link>
-
-              {/* Mobile Benches Dropdown */}
-              <div className="relative">
-                <button
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="w-full flex items-center justify-between text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-base font-medium"
-                >
-                  <span>Benches</span>
-                  <ChevronDown className={`h-4 w-4 transform transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
-                </button>
-                
-                {isDropdownOpen && (
-                  <div className="pl-4">
-                    {benchCategories.map((category) => (
-                      <Link
-                        key={category.name}
-                        href={category.href}
-                        className="block px-3 py-2 text-base text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white rounded-md"
-                        onClick={() => {
-                          setIsMobileMenuOpen(false)
-                          setIsDropdownOpen(false)
-                        }}
-                      >
-                        {category.name}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
 
               <Link
                 href="/leaderboard"
