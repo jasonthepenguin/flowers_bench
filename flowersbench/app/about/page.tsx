@@ -1,6 +1,7 @@
 // app/about/page.tsx
 import Link from 'next/link'
 import { ExternalLink } from 'lucide-react'
+import Image from 'next/image'
 
 export default function About() {
   return (
@@ -38,24 +39,56 @@ export default function About() {
           </p>
         </div>
 
-        {/* Technical Stack */}
+        {/* Team Credits Section */}
         <div className="glass rounded-2xl p-8 mb-12 soft-glow">
-          <h2 className="text-3xl font-semibold text-white mb-6">Technical Stack</h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[
-              { name: 'Next.js 15', color: 'text-neon-cyan' },
-              { name: 'TypeScript', color: 'text-neon-blue' },
-              { name: 'Supabase', color: 'text-neon-purple' },
-              { name: 'Tailwind CSS', color: 'text-neon-pink' },
-              { name: 'React 19', color: 'text-neon-cyan' },
-              { name: 'Vercel AI SDK', color: 'text-neon-blue' },
-              { name: 'OpenRouter', color: 'text-neon-purple' },
-              { name: 'Glassmorphism', color: 'text-neon-pink' }
-            ].map((tech, index) => (
-              <div key={index} className="glass-hover rounded-xl p-4 text-center">
-                <span className={`${tech.color} font-medium`}>{tech.name}</span>
+          <div className="grid md:grid-cols-2 gap-8">
+            
+            {/* flowersslop */}
+            <div className="text-center">
+              <div className="relative w-24 h-24 mx-auto mb-4">
+                <Image
+                  src="/flowers.jpg"
+                  alt="flowersslop profile"
+                  fill
+                  className="rounded-full object-cover"
+                />
               </div>
-            ))}
+              <h3 className="text-xl font-semibold text-white mb-2">flowersslop</h3>
+              <p className="text-white/70 mb-4">AI Godmother</p>
+              <a 
+                href="https://x.com/flowersslop" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-neon-purple hover:text-neon-pink transition-colors duration-300 inline-flex items-center gap-1"
+              >
+                @flowersslop
+                <ExternalLink className="h-4 w-4" />
+              </a>
+            </div>
+
+            {/* JasonBotterill3 */}
+            <div className="text-center">
+              <div className="relative w-24 h-24 mx-auto mb-4">
+                <Image
+                  src="/jason.jpg"
+                  alt="JasonBotterill3 profile"
+                  fill
+                  className="rounded-full object-cover"
+                />
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-2">Jason Botterill</h3>
+              <p className="text-white/70 mb-4">Vibe Coder</p>
+              <a 
+                href="https://x.com/JasonBotterill3" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-neon-cyan hover:text-neon-purple transition-colors duration-300 inline-flex items-center gap-1"
+              >
+                @JasonBotterill3
+                <ExternalLink className="h-4 w-4" />
+              </a>
+            </div>
+
           </div>
         </div>
 

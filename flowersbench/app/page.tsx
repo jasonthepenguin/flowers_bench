@@ -67,19 +67,6 @@ export default async function Home() {
             </div>
           )}
 
-          {/* Development Note */}
-          <div className="glass rounded-2xl p-8 text-center soft-glow">
-            <h3 className="text-xl font-semibold text-white mb-4">
-              🚧 Work in Progress
-            </h3>
-            <p className="text-white/70 font-light leading-relaxed">
-              This platform is being built by{' '}
-              <span className="text-neon-cyan font-medium">Jason Botterill</span>{' '}
-              as an exploration in full-stack development and AI model evaluation.
-              Stay tuned for more features and insights!
-            </p>
-          </div>
-
         </div>
       </div>
     );
