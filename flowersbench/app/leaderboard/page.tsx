@@ -116,27 +116,6 @@ export default async function Leaderboard() {
           </div>
         )}
 
-        {/* Info Section */}
-        <div className="mt-16 glass rounded-2xl p-8 soft-glow">
-          <h3 className="text-2xl font-semibold text-white mb-8 text-center">
-            How We Rank Models
-          </h3>
-          <div className="grid md:grid-cols-3 gap-6 text-center">
-            <div>
-              <div className="text-neon-cyan text-lg font-semibold mb-2">Aesthetics</div>
-              <p className="text-white/70 text-sm">Visual appeal and design elegance of responses</p>
-            </div>
-            <div>
-              <div className="text-neon-purple text-lg font-semibold mb-2">Playability</div>
-              <p className="text-white/70 text-sm">Fun factor and engaging conversation quality</p>
-            </div>
-            <div>
-              <div className="text-neon-pink text-lg font-semibold mb-2">Taste</div>
-              <p className="text-white/70 text-sm">Cultural refinement and sophisticated judgment</p>
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
   )
