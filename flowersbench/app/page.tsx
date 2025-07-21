@@ -23,7 +23,7 @@ export default async function Home() {
           {/* Hero Section */}
           <div className="text-center mb-16">
             <h1 className="text-6xl md:text-7xl font-light text-white mb-8 text-glow">
-              Flowers<span className="text-neon-cyan">Bench</span>
+              Flowers<span className="text-neon-pink">Bench</span>
             </h1>
             
             <p className="text-xl md:text-2xl text-white/80 font-light mb-4 leading-relaxed">

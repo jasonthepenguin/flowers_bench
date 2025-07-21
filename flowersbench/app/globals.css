@@ -171,6 +171,11 @@ body {
     color: hsl(var(--neon-purple));
     text-shadow: 0 0 10px hsl(var(--neon-purple));
   }
+  
+  .text-neon-pink {
+    color: hsl(var(--neon-pink));
+    text-shadow: 0 0 10px hsl(var(--neon-pink));
+  }
 }
 
 /* Scrollbar styling */

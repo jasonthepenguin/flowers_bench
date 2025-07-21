@@ -10,7 +10,7 @@ export default function About() {
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-5xl md:text-6xl font-light text-white mb-6 text-glow">
-            About <span className="text-neon-cyan">FlowersBench</span>
+            About <span className="text-white">Flowers</span><span className="text-neon-pink">Bench</span>
           </h1>
         </div>
 

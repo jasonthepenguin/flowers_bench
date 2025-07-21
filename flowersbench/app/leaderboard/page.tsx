@@ -41,7 +41,7 @@ export default async function Leaderboard() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-5xl md:text-6xl font-light text-white mb-6 text-glow">
-            Leader<span className="text-neon-cyan">board</span>
+            Leader<span className="text-neon-pink">board</span>
           </h1>
           <p className="text-xl text-white/70 font-light">
             Current AI model rankings based on comprehensive evaluation
