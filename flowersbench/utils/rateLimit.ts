@@ -17,6 +17,14 @@ export const strictRatelimit = new Ratelimit({
   prefix: "@upstash/ratelimit/strict",
 });
 
+// Very strict for authentication
+export const authRatelimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(3, "5 m"), // Only 3 login attempts per 5 minutes
+  analytics: true,
+  prefix: "@upstash/ratelimit/auth",
+});
+
 // Helper function to get client identifier
 export function getClientIdentifier(request: Request): string {
   // Try to get the real IP from various headers

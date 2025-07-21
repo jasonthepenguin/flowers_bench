@@ -5,8 +5,9 @@ import { ratelimit, getClientIdentifier } from './utils/rateLimit'
 // project root middleware.ts
 
 export async function middleware(request: NextRequest) {
-  // Apply rate limiting to API routes
-  if (request.nextUrl.pathname.startsWith('/api/')) {
+  // Apply rate limiting to API routes, but exclude admin routes (they have their own stricter limits)
+  if (request.nextUrl.pathname.startsWith('/api/') && 
+      !request.nextUrl.pathname.startsWith('/api/admin/')) {
     const identifier = getClientIdentifier(request);
     const { success, limit, reset, remaining } = await ratelimit.limit(identifier);
 

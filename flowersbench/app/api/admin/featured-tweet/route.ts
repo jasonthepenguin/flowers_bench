@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/utils/supabase/server'
 import { checkAdmin } from '@/utils/supabase/auth/adminGuard'
+import { headers } from 'next/headers'
+import { strictRatelimit, getClientIdentifier } from '@/utils/rateLimit'
 
 // GET - Fetch current featured tweet
 export async function GET() {
@@ -33,6 +35,24 @@ export async function GET() {
 
 // POST - Create/Update featured tweet
 export async function POST(request: NextRequest) {
+  // Rate limiting
+  const ip = getClientIdentifier(request)
+  const { success, limit, remaining, reset } = await strictRatelimit.limit(ip)
+  
+  if (!success) {
+    return NextResponse.json(
+      { error: 'Rate limit exceeded' }, 
+      { 
+        status: 429,
+        headers: {
+          'X-RateLimit-Limit': limit.toString(),
+          'X-RateLimit-Remaining': remaining.toString(),
+          'X-RateLimit-Reset': reset.toString(),
+        }
+      }
+    )
+  }
+
   try {
     // Verify admin authentication
     const isAdmin = await checkAdmin(true)

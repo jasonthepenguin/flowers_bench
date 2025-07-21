@@ -3,17 +3,23 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
-import { strictRatelimit } from '@/utils/rateLimit'
+import { authRatelimit, getClientIdentifier } from '@/utils/rateLimit'
 import { headers } from 'next/headers'
 
 export async function login(formData: FormData) {
   // Rate limit login attempts
   const headersList = await headers()
-  const forwarded = headersList.get("x-forwarded-for")
-  const realIp = headersList.get("x-real-ip") 
-  const ip = forwarded?.split(",")[0] || realIp || "anonymous"
   
-  const { success } = await strictRatelimit.limit(ip)
+  // For server actions, you need to build a pseudo-request:
+  const pseudoRequest = {
+    headers: {
+      get: (name: string) => headersList.get(name)
+    }
+  } as Request
+  
+  const ip = getClientIdentifier(pseudoRequest)
+  
+  const { success } = await authRatelimit.limit(ip)
   if (!success) {
     redirect('/login?error=rate-limit')
   }
