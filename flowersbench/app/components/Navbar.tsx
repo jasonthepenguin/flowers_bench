@@ -61,7 +61,7 @@ const Navbar = () => {
             
             <Link
               href="/login"
-              className="neon-button text-black font-semibold ml-4"
+              className="neon-button text-black font-medium text-sm px-3 py-1.5 ml-4"
             >
               Login
             </Link>
@@ -98,7 +98,7 @@ const Navbar = () => {
 
               <Link 
                 href="/login"
-                className="block neon-button text-black font-semibold mt-4 text-center"
+                className="block neon-button text-black font-medium text-sm px-3 py-1.5 mt-4 text-center"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Login
