@@ -1,11 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/utils/supabase/server'
 import { checkAdmin } from '@/utils/supabase/auth/adminGuard'
-import { headers } from 'next/headers'
-import { strictRatelimit } from '@/utils/rateLimit'
+import { strictRatelimit, getClientIdentifier } from '@/utils/rateLimit'
 
 // GET - Fetch all leaderboard entries
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const ip = getClientIdentifier(request)
+  const { success, limit, remaining, reset } = await strictRatelimit.limit(ip)
+  
+  if (!success) {
+    return NextResponse.json(
+      { error: 'Rate limit exceeded' }, 
+      { 
+        status: 429,
+        headers: {
+          'X-RateLimit-Limit': limit.toString(),
+          'X-RateLimit-Remaining': remaining.toString(),
+          'X-RateLimit-Reset': new Date(reset).toISOString(),
+        }
+      }
+    )
+  }
+
   try {
     // Verify admin authentication
     const isAdmin = await checkAdmin(true)
@@ -34,10 +50,7 @@ export async function GET() {
 // POST - Create new leaderboard entry
 export async function POST(request: NextRequest) {
   // Rate limiting
-  const headersList = await headers()
-  const forwarded = headersList.get("x-forwarded-for")
-  const realIp = headersList.get("x-real-ip") 
-  const ip = forwarded?.split(",")[0] || realIp || "anonymous"
+  const ip = getClientIdentifier(request)
   
   const { success, limit, remaining, reset } = await strictRatelimit.limit(ip)
   if (!success) {
@@ -48,7 +61,7 @@ export async function POST(request: NextRequest) {
         headers: {
           'X-RateLimit-Limit': limit.toString(),
           'X-RateLimit-Remaining': remaining.toString(),
-          'X-RateLimit-Reset': reset.toString(),
+          'X-RateLimit-Reset': new Date(reset).toISOString(),
         }
       }
     )
@@ -99,6 +112,23 @@ export async function POST(request: NextRequest) {
 
 // DELETE - Delete leaderboard entry
 export async function DELETE(request: NextRequest) {
+  const ip = getClientIdentifier(request)
+  const { success, limit, remaining, reset } = await strictRatelimit.limit(ip)
+  
+  if (!success) {
+    return NextResponse.json(
+      { error: 'Rate limit exceeded' }, 
+      { 
+        status: 429,
+        headers: {
+          'X-RateLimit-Limit': limit.toString(),
+          'X-RateLimit-Remaining': remaining.toString(),
+          'X-RateLimit-Reset': new Date(reset).toISOString(),
+        }
+      }
+    )
+  }
+
   try {
     // Verify admin authentication
     const isAdmin = await checkAdmin(true)

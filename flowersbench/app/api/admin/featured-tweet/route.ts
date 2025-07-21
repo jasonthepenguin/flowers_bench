@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
         headers: {
           'X-RateLimit-Limit': limit.toString(),
           'X-RateLimit-Remaining': remaining.toString(),
-          'X-RateLimit-Reset': reset.toString(),
+          'X-RateLimit-Reset': new Date(reset).toISOString(),
         }
       }
     )
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
         headers: {
           'X-RateLimit-Limit': limit.toString(),
           'X-RateLimit-Remaining': remaining.toString(),
-          'X-RateLimit-Reset': reset.toString(),
+          'X-RateLimit-Reset': new Date(reset).toISOString(),
         }
       }
     )
@@ -131,7 +131,7 @@ export async function DELETE(request: NextRequest) {
         headers: {
           'X-RateLimit-Limit': limit.toString(),
           'X-RateLimit-Remaining': remaining.toString(),
-          'X-RateLimit-Reset': reset.toString(),
+          'X-RateLimit-Reset': new Date(reset).toISOString(),
         }
       }
     )
