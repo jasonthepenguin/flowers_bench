@@ -1,6 +1,5 @@
 'use client'
 
-import { createClient } from '@/utils/supabase/client'
 import { useState, useEffect, useCallback } from 'react'
 
 // Define the type for a leaderboard entry
@@ -37,6 +36,8 @@ export default function LeaderboardEditor() {
     score: '',
     organization: ''
   })
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   // Add new states for tweets
   const [currentTweet, setCurrentTweet] = useState<TweetEntry | null>(null)
@@ -44,30 +45,33 @@ export default function LeaderboardEditor() {
     tweet_id: ''
   })
 
-  const supabase = createClient()
-
   const fetchEntries = useCallback(async () => {
-    const { data } = await supabase
-      .from('leaderboards')
-      .select('*')
-      .order('score', { ascending: false })
-    
-    if (data) setEntries(data as LeaderboardEntry[])
-  }, [supabase])
+    try {
+      setError(null)
+      const response = await fetch('/api/admin/leaderboard')
+      if (!response.ok) {
+        throw new Error('Failed to fetch entries')
+      }
+      const data = await response.json()
+      setEntries(data)
+    } catch (err) {
+      setError('Failed to load leaderboard entries')
+      console.error('Error fetching entries:', err)
+    }
+  }, [])
 
   const fetchCurrentTweet = useCallback(async () => {
-    const { data } = await supabase
-      .from('featured_tweets')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(1)
-    
-    if (data && data.length > 0) {
-      setCurrentTweet(data[0] as TweetEntry)
-    } else {
-      setCurrentTweet(null)
+    try {
+      const response = await fetch('/api/admin/featured-tweet')
+      if (!response.ok) {
+        throw new Error('Failed to fetch featured tweet')
+      }
+      const data = await response.json()
+      setCurrentTweet(data)
+    } catch (err) {
+      console.error('Error fetching featured tweet:', err)
     }
-  }, [supabase])
+  }, [])
 
   useEffect(() => {
     fetchEntries()
@@ -76,60 +80,120 @@ export default function LeaderboardEditor() {
 
   async function addEntry(e: React.FormEvent) {
     e.preventDefault()
-    const { error: insertError } = await supabase
-      .from('leaderboards')
-      .insert([{
-        model_name: newEntry.model_name,
-        score: parseFloat(newEntry.score),
-        organization: newEntry.organization
-      }])
+    setLoading(true)
+    setError(null)
 
-    if (insertError) {
-      console.error('Error adding entry:', insertError);
-      // Optionally add user-facing error handling
-      return;
+    try {
+      const response = await fetch('/api/admin/leaderboard', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model_name: newEntry.model_name,
+          score: newEntry.score,
+          organization: newEntry.organization
+        })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to add entry')
+      }
+
+      setNewEntry({ model_name: '', score: '', organization: '' })
+      fetchEntries()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to add entry')
+    } finally {
+      setLoading(false)
     }
-    setNewEntry({ model_name: '', score: '', organization: '' })
-    fetchEntries()
   }
 
   async function deleteEntry(id: string) {
-    const { error: deleteError } = await supabase
-      .from('leaderboards')
-      .delete()
-      .eq('id', id)
+    if (!confirm('Are you sure you want to delete this entry?')) {
+      return
+    }
 
-    if (!deleteError) {
+    setError(null)
+    try {
+      const response = await fetch(`/api/admin/leaderboard?id=${id}`, {
+        method: 'DELETE'
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to delete entry')
+      }
+
       fetchEntries()
+    } catch (err) {
+      setError('Failed to delete entry')
+      console.error('Error deleting entry:', err)
     }
   }
 
   async function addTweet(e: React.FormEvent) {
     e.preventDefault()
-    
-    // First, delete the current tweet if it exists
-    if (currentTweet) {
-      await supabase
-        .from('featured_tweets')
-        .delete()
-        .eq('id', currentTweet.id)
-    }
+    setLoading(true)
+    setError(null)
 
-    // Then add the new tweet
-    const { error: insertError } = await supabase
-      .from('featured_tweets')
-      .insert([{
-        tweet_id: newTweet.tweet_id
-      }])
+    try {
+      const response = await fetch('/api/admin/featured-tweet', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          tweet_id: newTweet.tweet_id
+        })
+      })
 
-    if (!insertError) {
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to update featured tweet')
+      }
+
       setNewTweet({ tweet_id: '' })
       fetchCurrentTweet()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update featured tweet')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function removeFeaturedTweet() {
+    if (!confirm('Are you sure you want to remove the featured tweet?')) {
+      return
+    }
+
+    setError(null)
+    try {
+      const response = await fetch('/api/admin/featured-tweet', {
+        method: 'DELETE'
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to remove featured tweet')
+      }
+
+      setCurrentTweet(null)
+    } catch (err) {
+      setError('Failed to remove featured tweet')
+      console.error('Error removing featured tweet:', err)
     }
   }
 
   return (
     <div className="space-y-8">
+      {error && (
+        <div className="p-4 bg-red-500/10 border border-red-500 rounded-md text-red-400">
+          {error}
+        </div>
+      )}
+
       <form onSubmit={addEntry} className="space-y-4">
         <input
           type="text"
@@ -137,13 +201,18 @@ export default function LeaderboardEditor() {
           value={newEntry.model_name}
           onChange={(e) => setNewEntry({...newEntry, model_name: e.target.value})}
           className="block w-full px-3 py-2 border border-zinc-700 rounded-md bg-zinc-900 text-white placeholder-zinc-400"
+          required
         />
         <input
           type="number"
-          placeholder="Score"
+          placeholder="Score (0-100)"
           value={newEntry.score}
           onChange={(e) => setNewEntry({...newEntry, score: e.target.value})}
           className="block w-full px-3 py-2 border border-zinc-700 rounded-md bg-zinc-900 text-white placeholder-zinc-400"
+          min="0"
+          max="100"
+          step="0.1"
+          required
         />
         <input
           type="text"
@@ -151,33 +220,39 @@ export default function LeaderboardEditor() {
           value={newEntry.organization}
           onChange={(e) => setNewEntry({...newEntry, organization: e.target.value})}
           className="block w-full px-3 py-2 border border-zinc-700 rounded-md bg-zinc-900 text-white placeholder-zinc-400"
+          required
         />
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-500 text-white rounded-md"
+          disabled={loading}
+          className="px-4 py-2 bg-blue-500 text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Add Entry
+          {loading ? 'Adding...' : 'Add Entry'}
         </button>
       </form>
 
       <div className="mt-8">
         <h2 className="text-2xl font-bold mb-4">Current Entries</h2>
         <div className="space-y-4">
-          {entries.map((entry) => (
-            <div key={entry.id} className="flex justify-between items-center p-4 border rounded-md">
-              <div>
-                <p className="font-bold">{entry.model_name}</p>
-                <p>Score: {entry.score.toFixed(1)}</p>
-                <p>Organization: {entry.organization}</p>
+          {entries.length === 0 ? (
+            <p className="text-zinc-400">No entries yet</p>
+          ) : (
+            entries.map((entry) => (
+              <div key={entry.id} className="flex justify-between items-center p-4 border border-zinc-700 rounded-md">
+                <div>
+                  <p className="font-bold">{entry.model_name}</p>
+                  <p>Score: {entry.score.toFixed(1)}</p>
+                  <p>Organization: {entry.organization}</p>
+                </div>
+                <button
+                  onClick={() => deleteEntry(entry.id)}
+                  className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+                >
+                  Delete
+                </button>
               </div>
-              <button
-                onClick={() => deleteEntry(entry.id)}
-                className="px-3 py-1 bg-red-500 text-white rounded-md"
-              >
-                Delete
-              </button>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
 
@@ -204,24 +279,34 @@ export default function LeaderboardEditor() {
                 setNewTweet({ tweet_id: id });
               }}
               className="block w-full px-3 py-2 border border-zinc-700 rounded-md bg-zinc-900 text-white placeholder-zinc-400"
+              required
             />
           </div>
           <button
             type="submit"
-            className="px-4 py-2 bg-blue-500 text-white rounded-md"
+            disabled={loading}
+            className="px-4 py-2 bg-blue-500 text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Update Featured Tweet
+            {loading ? 'Updating...' : 'Update Featured Tweet'}
           </button>
         </form>
 
         {currentTweet && (
           <div className="mt-8">
             <h3 className="text-lg font-semibold mb-2">Currently Featured:</h3>
-            <div className="p-4 border border-zinc-700 rounded-md">
-              <p className="font-bold">Tweet ID: {currentTweet.tweet_id}</p>
-              <p className="text-sm text-zinc-400">
-                Added: {new Date(currentTweet.created_at).toLocaleString()}
-              </p>
+            <div className="p-4 border border-zinc-700 rounded-md flex justify-between items-center">
+              <div>
+                <p className="font-bold">Tweet ID: {currentTweet.tweet_id}</p>
+                <p className="text-sm text-zinc-400">
+                  Added: {new Date(currentTweet.created_at).toLocaleString()}
+                </p>
+              </div>
+              <button
+                onClick={removeFeaturedTweet}
+                className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+              >
+                Remove
+              </button>
             </div>
           </div>
         )}
