@@ -2,11 +2,12 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, ChevronDown } from 'lucide-react'
 import FlowersBenchLogo from './icons/FlowersBenchLogo'
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isBenchesOpen, setIsBenchesOpen] = useState(false)
 
   return (
     <nav className="fixed top-4 left-4 right-4 glass rounded-2xl z-50 backdrop-blur-xl">
@@ -51,6 +52,29 @@ const Navbar = () => {
             >
               Leaderboard
             </Link>
+
+            {/* Benches Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setIsBenchesOpen(!isBenchesOpen)}
+                className="glass-hover px-4 py-2 rounded-xl text-sm font-medium text-white/90 hover:text-white transition-all duration-300 flex items-center space-x-1"
+              >
+                <span>Benches</span>
+                <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isBenchesOpen ? 'rotate-180' : ''}`} />
+              </button>
+              
+              {isBenchesOpen && (
+                <div className="absolute top-full mt-2 w-48 glass rounded-xl py-2 shadow-lg">
+                  <Link
+                    href="/benches/jump-game-clone"
+                    className="block px-4 py-2 text-sm text-white/90 hover:text-white hover:bg-white/10 transition-all duration-200"
+                    onClick={() => setIsBenchesOpen(false)}
+                  >
+                    Jump Game Clone
+                  </Link>
+                </div>
+              )}
+            </div>
             
             <Link
               href="/about"
@@ -87,6 +111,17 @@ const Navbar = () => {
               >
                 Leaderboard
               </Link>
+
+              <div className="px-4 py-3">
+                <div className="text-base font-medium text-white/90 mb-2">Benches</div>
+                <Link
+                  href="/benches/jump-game-clone"
+                  className="block glass-hover px-4 py-2 rounded-xl text-sm text-white/70 hover:text-white transition-all duration-300 ml-2"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Jump Game Clone
+                </Link>
+              </div>
               
               <Link
                 href="/about"
