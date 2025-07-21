@@ -1,49 +1,87 @@
 import { login } from './actions'
 import CherryBlossom from '../components/icons/CherryBlossom'
+import Link from 'next/link'
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen flex items-start justify-center bg-gradient-to-b from-pink-950 to-black pt-24 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
-            Flowers and Jason only
-          </h2>
+    <div className="min-h-screen pt-24 pb-12 flex items-center justify-center">
+      <div className="max-w-md w-full mx-6">
+        
+        {/* Header */}
+        <div className="text-center mb-12">
+          <div className="flex justify-center mb-6">
+            <div className="glass rounded-2xl p-4 soft-glow-pink">
+              <CherryBlossom />
+            </div>
+          </div>
+          <h1 className="text-4xl font-light text-white mb-4 text-glow">
+            Admin <span className="text-neon-pink">Access</span>
+          </h1>
+          <p className="text-white/70 font-light">
+            Restricted to authorized users only
+          </p>
         </div>
-        <form className="mt-8 space-y-6">
-          <div className="rounded-md shadow-sm -space-y-px">
+
+        {/* Login Form */}
+        <div className="glass rounded-2xl p-8 soft-glow">
+          <form className="space-y-6">
             <div>
+              <label htmlFor="email" className="block text-sm font-medium text-white/80 mb-2">
+                Email Address
+              </label>
               <input
                 id="email"
                 name="email"
                 type="email"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-pink-700 bg-zinc-900 placeholder-gray-400 text-white rounded-t-md focus:outline-none focus:ring-pink-500 focus:border-pink-500 focus:z-10 sm:text-sm transition-colors duration-200"
-                placeholder="Email address"
+                className="w-full glass rounded-xl px-4 py-3 text-white placeholder-white/50 border border-white/20 focus:border-neon-pink focus:outline-none transition-colors"
+                placeholder="Enter your email"
               />
             </div>
+            
             <div>
+              <label htmlFor="password" className="block text-sm font-medium text-white/80 mb-2">
+                Password
+              </label>
               <input
                 id="password"
                 name="password"
                 type="password"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-pink-700 bg-zinc-900 placeholder-gray-400 text-white rounded-b-md focus:outline-none focus:ring-pink-500 focus:border-pink-500 focus:z-10 sm:text-sm transition-colors duration-200"
-                placeholder="Password"
+                className="w-full glass rounded-xl px-4 py-3 text-white placeholder-white/50 border border-white/20 focus:border-neon-pink focus:outline-none transition-colors"
+                placeholder="Enter your password"
               />
             </div>
-          </div>
-          
-          <div className="flex gap-4">
+            
             <button
               formAction={login}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 transition-colors duration-200"
+              className="w-full neon-button-secondary text-black font-semibold"
             >
-              <span className="mr-2">Sign in</span>
-              <CherryBlossom />
+              Sign In
             </button>
+          </form>
+          
+          <div className="mt-8 pt-6 border-t border-white/20 text-center">
+            <p className="text-white/60 text-sm">
+              Not an admin?{' '}
+              <Link href="/" className="text-neon-cyan hover:text-neon-purple transition-colors duration-300">
+                Return to homepage
+              </Link>
+            </p>
           </div>
-        </form>
+        </div>
+
+        {/* Info Card */}
+        <div className="mt-8 glass rounded-2xl p-6 text-center soft-glow">
+          <h3 className="text-lg font-semibold text-white mb-2">
+            🌸 Flowers & Jason Only
+          </h3>
+          <p className="text-white/70 text-sm font-light">
+            This admin panel is restricted to authorized users for managing 
+            leaderboard entries and featured content.
+          </p>
+        </div>
+
       </div>
     </div>
   )

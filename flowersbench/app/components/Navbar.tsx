@@ -9,80 +9,72 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-white dark:bg-zinc-900 shadow-sm dark:shadow-zinc-800 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="fixed top-4 left-4 right-4 glass rounded-2xl z-50 backdrop-blur-xl">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo and Icon Section */}
           <div className="flex items-center space-x-4">
-            <Link href="/" className="flex items-center space-x-2">
-              {/* <span className="text-xl font-semibold dark:text-white">FlowersBench</span> */}
+            <Link href="/" className="flex items-center space-x-3 group no-underline">
+              <div className="rounded-xl p-2 transition-all duration-300 hover:scale-105">
+                <FlowersBenchLogo />
+              </div>
+              <span className="text-xl font-semibold text-white text-glow">FlowersBench</span>
             </Link>
-            <a
-              href="https://x.com/flowersslop"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:opacity-80 transition-opacity"
-            >
-              
-              <FlowersBenchLogo />
-            </a>
           </div>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+              className="glass-hover p-3 rounded-xl text-white"
             >
               {isMobileMenuOpen ? (
-                <X className="h-6 w-6" />
+                <X className="h-5 w-5" />
               ) : (
-                <Menu className="h-6 w-6" />
+                <Menu className="h-5 w-5" />
               )}
             </button>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex space-x-8">
-            {/* Home Link */}
+          <div className="hidden md:flex items-center space-x-2">
             <Link
               href="/"
-              className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+              className="glass-hover px-4 py-2 rounded-xl text-sm font-medium text-white/90 hover:text-white transition-all duration-300"
             >
               Home
             </Link>
 
             <Link
               href="/leaderboard"
-              className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+              className="glass-hover px-4 py-2 rounded-xl text-sm font-medium text-white/90 hover:text-white transition-all duration-300"
             >
               Leaderboard
             </Link>
+            
             <Link
               href="/about"
-              className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+              className="glass-hover px-4 py-2 rounded-xl text-sm font-medium text-white/90 hover:text-white transition-all duration-300"
             >
               About
             </Link>
+            
             <Link
-                href="/login"
-                className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  Login
-              </Link>
+              href="/login"
+              className="neon-button text-black font-semibold ml-4"
+            >
+              Login
+            </Link>
           </div>
-
-
         </div>
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1">
-              {/* Home Link */}
+          <div className="md:hidden border-t border-white/20 mt-4">
+            <div className="px-2 pt-4 pb-6 space-y-2">
               <Link
                 href="/"
-                className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                className="block glass-hover px-4 py-3 rounded-xl text-base font-medium text-white/90 hover:text-white transition-all duration-300"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Home
@@ -90,14 +82,15 @@ const Navbar = () => {
 
               <Link
                 href="/leaderboard"
-                className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                className="block glass-hover px-4 py-3 rounded-xl text-base font-medium text-white/90 hover:text-white transition-all duration-300"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Leaderboard
               </Link>
+              
               <Link
                 href="/about"
-                className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                className="block glass-hover px-4 py-3 rounded-xl text-base font-medium text-white/90 hover:text-white transition-all duration-300"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 About
@@ -105,9 +98,9 @@ const Navbar = () => {
 
               <Link 
                 href="/login"
-                className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                className="block neon-button text-black font-semibold mt-4 text-center"
                 onClick={() => setIsMobileMenuOpen(false)}
-                  >
+              >
                 Login
               </Link>
             </div>

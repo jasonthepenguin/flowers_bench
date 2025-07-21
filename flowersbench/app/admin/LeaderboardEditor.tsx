@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { Plus, Trash2, Edit3, Twitter } from 'lucide-react'
 
 // Define the type for a leaderboard entry
 type LeaderboardEntry = {
@@ -187,82 +188,128 @@ export default function LeaderboardEditor() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-12">
+      
+      {/* Error Alert */}
       {error && (
-        <div className="p-4 bg-red-500/10 border border-red-500 rounded-md text-red-400">
-          {error}
+        <div className="glass rounded-2xl p-4 border border-red-500/30 soft-glow">
+          <div className="text-red-400 font-medium">{error}</div>
         </div>
       )}
 
-      <form onSubmit={addEntry} className="space-y-4">
-        <input
-          type="text"
-          placeholder="Model Name"
-          value={newEntry.model_name}
-          onChange={(e) => setNewEntry({...newEntry, model_name: e.target.value})}
-          className="block w-full px-3 py-2 border border-zinc-700 rounded-md bg-zinc-900 text-white placeholder-zinc-400"
-          required
-        />
-        <input
-          type="number"
-          placeholder="Score (0-100)"
-          value={newEntry.score}
-          onChange={(e) => setNewEntry({...newEntry, score: e.target.value})}
-          className="block w-full px-3 py-2 border border-zinc-700 rounded-md bg-zinc-900 text-white placeholder-zinc-400"
-          min="0"
-          max="100"
-          step="0.1"
-          required
-        />
-        <input
-          type="text"
-          placeholder="Organization"
-          value={newEntry.organization}
-          onChange={(e) => setNewEntry({...newEntry, organization: e.target.value})}
-          className="block w-full px-3 py-2 border border-zinc-700 rounded-md bg-zinc-900 text-white placeholder-zinc-400"
-          required
-        />
-        <button
-          type="submit"
-          disabled={loading}
-          className="px-4 py-2 bg-blue-500 text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {loading ? 'Adding...' : 'Add Entry'}
-        </button>
-      </form>
+      {/* Add New Entry Section */}
+      <div className="glass rounded-2xl p-8 soft-glow">
+        <div className="flex items-center gap-3 mb-6">
+          <Plus className="h-6 w-6 text-neon-cyan" />
+          <h2 className="text-2xl font-semibold text-white">Add New Model</h2>
+        </div>
+        
+        <form onSubmit={addEntry} className="grid md:grid-cols-3 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-white/80 mb-2">Model Name</label>
+            <input
+              type="text"
+              placeholder="GPT-4, Claude-3, etc."
+              value={newEntry.model_name}
+              onChange={(e) => setNewEntry({...newEntry, model_name: e.target.value})}
+              className="w-full glass rounded-xl px-4 py-3 text-white placeholder-white/50 border border-white/20 focus:border-neon-cyan focus:outline-none transition-colors"
+              required
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-white/80 mb-2">Score (0-100)</label>
+            <input
+              type="number"
+              placeholder="85.5"
+              value={newEntry.score}
+              onChange={(e) => setNewEntry({...newEntry, score: e.target.value})}
+              className="w-full glass rounded-xl px-4 py-3 text-white placeholder-white/50 border border-white/20 focus:border-neon-cyan focus:outline-none transition-colors"
+              min="0"
+              max="100"
+              step="0.1"
+              required
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-white/80 mb-2">Organization</label>
+            <input
+              type="text"
+              placeholder="OpenAI, Anthropic, etc."
+              value={newEntry.organization}
+              onChange={(e) => setNewEntry({...newEntry, organization: e.target.value})}
+              className="w-full glass rounded-xl px-4 py-3 text-white placeholder-white/50 border border-white/20 focus:border-neon-cyan focus:outline-none transition-colors"
+              required
+            />
+          </div>
+          
+          <div className="md:col-span-3">
+            <button
+              type="submit"
+              disabled={loading}
+              className="neon-button text-black font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? 'Adding...' : 'Add Model'}
+            </button>
+          </div>
+        </form>
+      </div>
 
-      <div className="mt-8">
-        <h2 className="text-2xl font-bold mb-4">Current Entries</h2>
-        <div className="space-y-4">
+      {/* Current Entries */}
+      <div className="glass rounded-2xl p-8 soft-glow">
+        <div className="flex items-center gap-3 mb-6">
+          <Edit3 className="h-6 w-6 text-neon-purple" />
+          <h2 className="text-2xl font-semibold text-white">Current Entries</h2>
+        </div>
+        
+        <div className="space-y-3">
           {entries.length === 0 ? (
-            <p className="text-zinc-400">No entries yet</p>
+            <div className="text-center py-12">
+              <div className="text-6xl mb-4">🤖</div>
+              <p className="text-white/60 font-light">No entries yet</p>
+            </div>
           ) : (
-            entries.map((entry) => (
-              <div key={entry.id} className="flex justify-between items-center p-4 border border-zinc-700 rounded-md">
-                <div>
-                  <p className="font-bold">{entry.model_name}</p>
-                  <p>Score: {entry.score.toFixed(1)}</p>
-                  <p>Organization: {entry.organization}</p>
+            entries.map((entry, index) => (
+              <div key={entry.id} className="glass-hover rounded-xl p-6 border border-white/10">
+                <div className="flex items-center justify-between flex-wrap gap-4">
+                  <div className="flex items-center gap-4 flex-1 min-w-0">
+                    <div className="flex items-center justify-center w-10 h-10 rounded-lg glass text-white/60 font-bold">
+                      #{index + 1}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-lg font-semibold text-white truncate">
+                        {entry.model_name}
+                      </h3>
+                      <p className="text-white/60 text-sm">
+                        {entry.organization} • Score: {entry.score.toFixed(1)}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <button
+                    onClick={() => deleteEntry(entry.id)}
+                    className="glass-hover p-3 rounded-lg text-red-400 hover:text-red-300 transition-colors"
+                  >
+                    <Trash2 className="h-5 w-5" />
+                  </button>
                 </div>
-                <button
-                  onClick={() => deleteEntry(entry.id)}
-                  className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
-                >
-                  Delete
-                </button>
               </div>
             ))
           )}
         </div>
       </div>
 
-      {/* Tweet Management Section */}
-      <div className="mt-12 pt-8 border-t border-zinc-700">
-        <h2 className="text-2xl font-bold mb-4">Featured Tweet</h2>
+      {/* Featured Tweet Management */}
+      <div className="glass rounded-2xl p-8 soft-glow">
+        <div className="flex items-center gap-3 mb-6">
+          <Twitter className="h-6 w-6 text-neon-pink" />
+          <h2 className="text-2xl font-semibold text-white">Featured Tweet</h2>
+        </div>
         
-        <form onSubmit={addTweet} className="space-y-4">
-          <div className="space-y-2">
-            <label className="block text-sm text-zinc-400">Tweet URL or ID</label>
+        <form onSubmit={addTweet} className="space-y-4 mb-8">
+          <div>
+            <label className="block text-sm font-medium text-white/80 mb-2">Tweet URL or ID</label>
             <input
               type="text"
               placeholder="Paste tweet URL or ID (e.g., 1874058976184459478)"
@@ -278,39 +325,42 @@ export default function LeaderboardEditor() {
                 }
                 setNewTweet({ tweet_id: id });
               }}
-              className="block w-full px-3 py-2 border border-zinc-700 rounded-md bg-zinc-900 text-white placeholder-zinc-400"
+              className="w-full glass rounded-xl px-4 py-3 text-white placeholder-white/50 border border-white/20 focus:border-neon-pink focus:outline-none transition-colors"
               required
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="px-4 py-2 bg-blue-500 text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            className="neon-button-secondary text-black font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Updating...' : 'Update Featured Tweet'}
           </button>
         </form>
 
         {currentTweet && (
-          <div className="mt-8">
-            <h3 className="text-lg font-semibold mb-2">Currently Featured:</h3>
-            <div className="p-4 border border-zinc-700 rounded-md flex justify-between items-center">
+          <div className="glass-hover rounded-xl p-6 border border-white/10">
+            <div className="flex items-center justify-between">
               <div>
-                <p className="font-bold">Tweet ID: {currentTweet.tweet_id}</p>
-                <p className="text-sm text-zinc-400">
+                <h3 className="text-lg font-semibold text-white mb-2">Currently Featured</h3>
+                <p className="text-neon-pink font-mono text-sm mb-1">
+                  Tweet ID: {currentTweet.tweet_id}
+                </p>
+                <p className="text-white/60 text-sm">
                   Added: {new Date(currentTweet.created_at).toLocaleString()}
                 </p>
               </div>
               <button
                 onClick={removeFeaturedTweet}
-                className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+                className="glass-hover p-3 rounded-lg text-red-400 hover:text-red-300 transition-colors"
               >
-                Remove
+                <Trash2 className="h-5 w-5" />
               </button>
             </div>
           </div>
         )}
       </div>
+
     </div>
   )
 }
