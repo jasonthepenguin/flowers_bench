@@ -1,20 +1,35 @@
 // app/page.tsx
 
 import { Tweet } from "react-tweet";
-import { createClient } from '@/utils/supabase/server'
 import Link from 'next/link'
 
-export default async function Home() {
+import { headers } from 'next/headers';
+
+async function getFeaturedTweet() {
   try {
-    const supabase = await createClient()
-    const { data, error } = await supabase
-      .from('featured_tweets')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(1)
+    // For server-side rendering, we need to construct the full URL
+    const host = (await headers()).get('host');
+    const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+    const baseUrl = host ? `${protocol}://${host}` : process.env.NEXT_PUBLIC_BASE_URL || '';
     
-    if (error) throw error
-    const currentTweet = data?.[0] || null
+    const response = await fetch(`${baseUrl}/api/featured-tweets`, {
+      next: { revalidate: 300 } // Cache for 5 minutes
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch featured tweet');
+    }
+    
+    const data = await response.json();
+    return data.tweet;
+  } catch (error) {
+    console.error('Error fetching featured tweet:', error);
+    return null;
+  }
+}
+
+export default async function Home() {
+  const currentTweet = await getFeaturedTweet();
 
     return (
       <div className="min-h-screen pt-24 pb-12">
@@ -70,17 +85,4 @@ export default async function Home() {
         </div>
       </div>
     );
-  } catch (error) {
-    console.error('Error fetching tweet:', error)
-    return (
-      <div className="min-h-screen pt-24 flex items-center justify-center">
-        <div className="glass rounded-2xl p-8 text-center">
-          <h2 className="text-xl font-semibold text-white mb-4">
-            Unable to load content
-          </h2>
-          <p className="text-white/70">Please try refreshing the page</p>
-        </div>
-      </div>
-    )
-  }
 }

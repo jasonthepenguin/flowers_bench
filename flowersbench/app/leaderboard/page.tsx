@@ -1,10 +1,40 @@
 // app/leaderboard/page.tsx
 
-import { createClient } from '@/utils/supabase/server'
 import { Trophy, Medal, Award } from 'lucide-react'
+import { headers } from 'next/headers';
 
 // Add caching
 export const revalidate = 60
+
+interface LeaderboardEntry {
+  id: string;
+  model_name: string;
+  organization: string;
+  score: number;
+}
+
+async function getLeaderboardEntries(): Promise<LeaderboardEntry[]> {
+  try {
+    // For server-side rendering, we need to construct the full URL
+    const host = (await headers()).get('host');
+    const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+    const baseUrl = host ? `${protocol}://${host}` : process.env.NEXT_PUBLIC_BASE_URL || '';
+    
+    const response = await fetch(`${baseUrl}/api/leaderboard`, {
+      next: { revalidate: 60 } // Cache for 1 minute
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch leaderboard');
+    }
+    
+    const data = await response.json();
+    return data.entries || [];
+  } catch (error) {
+    console.error('Error fetching leaderboard:', error);
+    return [];
+  }
+}
 
 function getRankIcon(rank: number) {
   switch (rank) {
@@ -27,12 +57,7 @@ function getScoreColor(score: number) {
 }
 
 export default async function Leaderboard() {
-  const supabase = await createClient()
-  
-  const { data: entries } = await supabase
-    .from('leaderboards')
-    .select('*')
-    .order('score', { ascending: false })
+  const entries = await getLeaderboardEntries();
 
   return (
     <div className="min-h-screen pt-24 pb-12">
