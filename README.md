@@ -1,9 +1,12 @@
 
 # FlowersBench
 
-[🌸 Live Site](https://flowersbench.com)
 
 FlowersBench is a public, portfolio project for benchmarking AI models, featuring a leaderboard, model comparison tools, and an admin panel. Built with Next.js, Supabase, and Tailwind CSS, it provides a fun and ethical way to compare LLMs, originally created for a friend to track and evaluate models.
+
+[🌸 Live Site](https://flowersbench.com)
+
+<img width="1453" height="1189" alt="Pasted Graphic 5" src="https://github.com/user-attachments/assets/b701df66-b157-46b4-8723-33ca645bb17b" />
 
 ## Features
 
@@ -24,55 +27,6 @@ FlowersBench is a public, portfolio project for benchmarking AI models, featurin
 - [OpenRouter/AI SDK](https://openrouter.ai/)
 - [Vercel](https://vercel.com/) (Deployment)
 
-## Getting Started
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/YOUR_USERNAME/flowers_bench.git
-cd flowers_bench/flowersbench
-```
-
-### 2. Install dependencies
-
-```bash
-npm install
-# or
-yarn install
-```
-
-### 3. Set up Supabase
-
-- Create a [Supabase](https://supabase.com/) project.
-- Manually create the required tables:
-  - `leaderboards` (id, model_name, score, organization, created_at)
-  - `featured_tweets` (id, tweet_id, created_at)
-  - `profiles` (id, is_admin)
-- Enable authentication and set up at least one admin user in the `profiles` table.
-
-### 4. Configure environment variables
-
-Create a `.env.local` file in the root with:
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-OPENROUTER_API_KEY=your_openrouter_api_key # (for admin use)
-```
-
-### 5. Run the development server
-
-```bash
-npm run dev
-# or
-yarn dev
-```
-
-Visit [http://localhost:3000](http://localhost:3000) to view the app.
-
-## Deployment
-
-This project is ready to deploy on [Vercel](https://vercel.com/). Just connect your repo and set the environment variables in the Vercel dashboard.
 
 ## License
 
